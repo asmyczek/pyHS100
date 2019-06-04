@@ -141,6 +141,16 @@ class SmartBulb(SmartDevice):
 
         :param tuple state: hue, saturation and value (degrees, %, %)
         """
+        self.set_hsv(state)
+
+    def set_hsv(self, state: Tuple[int, int, int], period=500):
+        """
+        Sets new HSV, if supported
+
+        :param tuple state: hue, saturation and value (degrees, %, %)
+        :param period: The transition period in milliseconds, default 500
+        """
+
         if not self.is_color:
             return None
 
@@ -163,7 +173,8 @@ class SmartBulb(SmartDevice):
             "hue": state[0],
             "saturation": state[1],
             "brightness": state[2],
-            "color_temp": 0
+            "color_temp": 0,
+            "transition_period": period
             }
         self.set_light_state(light_state)
 
@@ -191,6 +202,15 @@ class SmartBulb(SmartDevice):
 
         :param int temp: The new color temperature, in Kelvin
         """
+        self.set_color_temp(temp)
+
+    def set_color_temp(self, temp: int, period=500) -> None:
+        """
+        Set the color temperature of the device, if supported
+
+        :param int temp: The new color temperature, in Kelvin
+        :param int period: The transition period in milliseconds, default 500
+        """
         if not self.is_variable_color_temp:
             return None
 
@@ -201,6 +221,7 @@ class SmartBulb(SmartDevice):
 
         light_state = {
             "color_temp": temp,
+            "transition_period": period
         }
         self.set_light_state(light_state)
 
@@ -228,11 +249,22 @@ class SmartBulb(SmartDevice):
 
         :param int brightness: brightness in percent
         """
+        self.set_brightness(brightness)
+
+    def set_brightness(self, brightness: int, period=500) -> None:
+        """
+        Set the current brightness of the device, if supported
+
+        :param int brightness: brightness in percent
+        :param int period: The transition period in milliseconds, default 500
+        """
+
         if not self.is_dimmable:
             return None
 
         light_state = {
             "brightness": brightness,
+            "transition_period": period
         }
         self.set_light_state(light_state)
 
