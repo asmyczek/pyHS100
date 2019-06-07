@@ -20,6 +20,8 @@ class SmartBulb(SmartDevice):
     # change state of bulb
     p.state = "ON"
     p.state = "OFF"
+    # set transition period
+    p.transition_period = 1000
     # query and print current state of plug
     print(p.state)
     # check whether the bulb supports color changes
@@ -49,11 +51,15 @@ class SmartBulb(SmartDevice):
     BULB_STATE_ON = 'ON'
     BULB_STATE_OFF = 'OFF'
 
+    # default transition period
+    DEFAULT_TRANSITION_PERIOD = 500
+
     def __init__(self,
                  host: str,
                  protocol: 'TPLinkSmartHomeProtocol' = None) -> None:
         SmartDevice.__init__(self, host, protocol)
         self.emeter_type = "smartlife.iot.common.emeter"
+        self.transition_period = self.DEFAULT_TRANSITION_PERIOD
 
     @property
     def is_color(self) -> bool:
@@ -143,7 +149,7 @@ class SmartBulb(SmartDevice):
         """
         self.set_hsv(state)
 
-    def set_hsv(self, state: Tuple[int, int, int], period=500):
+    def set_hsv(self, state: Tuple[int, int, int], period=None):
         """
         Sets new HSV, if supported
 
@@ -168,6 +174,9 @@ class SmartBulb(SmartDevice):
             raise SmartDeviceException(
                     'Invalid brightness value: {} '
                     '(valid range: 0-100%)'.format(state[2]))
+
+        if period is None:
+            period = self.transition_period
 
         light_state = {
             "hue": state[0],
@@ -204,7 +213,7 @@ class SmartBulb(SmartDevice):
         """
         self.set_color_temp(temp)
 
-    def set_color_temp(self, temp: int, period=500) -> None:
+    def set_color_temp(self, temp: int, period=None) -> None:
         """
         Set the color temperature of the device, if supported
 
@@ -218,6 +227,9 @@ class SmartBulb(SmartDevice):
                 temp > self.valid_temperature_range[1]:
             raise ValueError("Temperature should be between {} "
                              "and {}".format(*self.valid_temperature_range))
+
+        if period is None:
+            period = self.transition_period
 
         light_state = {
             "color_temp": temp,
@@ -251,7 +263,7 @@ class SmartBulb(SmartDevice):
         """
         self.set_brightness(brightness)
 
-    def set_brightness(self, brightness: int, period=500) -> None:
+    def set_brightness(self, brightness: int, period=None) -> None:
         """
         Set the current brightness of the device, if supported
 
@@ -261,6 +273,9 @@ class SmartBulb(SmartDevice):
 
         if not self.is_dimmable:
             return None
+
+        if period is None:
+            period = self.transition_period
 
         light_state = {
             "brightness": brightness,
