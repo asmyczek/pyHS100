@@ -307,6 +307,17 @@ class SmartBulb(SmartDevice):
                            BULB_STATE_ON
                            BULB_STATE_OFF
         """
+        self.set_state(bulb_state)
+
+    def set_state(self, bulb_state: str, period=None) -> None:
+        """
+        Set the new bulb state
+
+        :param bulb_state: one of
+                           BULB_STATE_ON
+                           BULB_STATE_OFF
+        :param int period: The transition period in milliseconds, default 500
+        """
         if bulb_state == self.BULB_STATE_ON:
             new_state = 1
         elif bulb_state == self.BULB_STATE_OFF:
@@ -314,8 +325,12 @@ class SmartBulb(SmartDevice):
         else:
             raise ValueError
 
+        if period is None:
+            period = self.transition_period
+
         light_state = {
             "on_off": new_state,
+            "transition_period": period
         }
         self.set_light_state(light_state)
 
@@ -342,17 +357,17 @@ class SmartBulb(SmartDevice):
     def is_on(self) -> bool:
         return bool(self.state == self.BULB_STATE_ON)
 
-    def turn_off(self) -> None:
+    def turn_off(self, period=None) -> None:
         """
         Turn the bulb off.
         """
-        self.state = self.BULB_STATE_OFF
+        self.set_state(self.BULB_STATE_OFF)
 
     def turn_on(self) -> None:
         """
         Turn the bulb on.
         """
-        self.state = self.BULB_STATE_ON
+        self.set_state(self.BULB_STATE_ON)
 
     @property
     def has_emeter(self) -> bool:
