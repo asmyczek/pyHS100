@@ -203,8 +203,9 @@ def emeter(dev, year, month, erase):
 @cli.command()
 @click.argument("brightness", type=click.IntRange(0, 100), default=None,
                 required=False)
+@click.option('--transition', type=int, default=None, required=False)
 @pass_dev
-def brightness(dev, brightness):
+def brightness(dev, brightness, transition):
     """Get or set brightness."""
     if not dev.is_dimmable:
         click.echo("This device does not support brightness.")
@@ -213,14 +214,18 @@ def brightness(dev, brightness):
         click.echo("Brightness: %s" % dev.brightness)
     else:
         click.echo("Setting brightness to %s" % brightness)
-        dev.brightness = brightness
+        if transition:
+            dev.set_brightness(brightness, transition)
+        else:
+            dev.brightness = brightness
 
 
 @cli.command()
 @click.argument("temperature", type=click.IntRange(2500, 9000), default=None,
                 required=False)
+@click.option('--transition', type=int, default=None, required=False)
 @pass_dev
-def temperature(dev, temperature):
+def temperature(dev, temperature, transition):
     """Get or set color temperature. (Bulb only)"""
     if temperature is None:
         click.echo("Color temperature: %s" % dev.color_temp)
@@ -231,16 +236,20 @@ def temperature(dev, temperature):
                        " or a pull request for model '%s'" % dev.model)
     else:
         click.echo("Setting color temperature to %s" % temperature)
-        dev.color_temp = temperature
+        if transition:
+            dev.set_color_temp(temperature, transition)
+        else:
+            dev.color_temp = temperature
 
 
 @cli.command()
 @click.argument("h", type=click.IntRange(0, 360), default=None, required=False)
 @click.argument("s", type=click.IntRange(0, 100), default=None, required=False)
 @click.argument("v", type=click.IntRange(0, 100), default=None, required=False)
+@click.option('--transition', type=int, default=None, required=False)
 @click.pass_context
 @pass_dev
-def hsv(dev, ctx, h, s, v):
+def hsv(dev, ctx, h, s, v, transition):
     """Get or set color in HSV. (Bulb only)"""
     if h is None:
         click.echo("Current HSV: %s %s %s" % dev.hsv)
@@ -248,7 +257,10 @@ def hsv(dev, ctx, h, s, v):
         raise click.BadArgumentUsage("Setting a color requires 3 values.", ctx)
     else:
         click.echo("Setting HSV: %s %s %s" % (h, s, v))
-        dev.hsv = (h, s, v)
+        if transition:
+            dev.set_hsv((h, s, v), transition)
+        else:
+            dev.hsv = (h, s, v)
 
 
 @cli.command()
