@@ -361,13 +361,13 @@ class SmartBulb(SmartDevice):
         """
         Turn the bulb off.
         """
-        self.set_state(self.BULB_STATE_OFF)
+        self.set_state(self.BULB_STATE_OFF, period)
 
-    def turn_on(self) -> None:
+    def turn_on(self, period=None) -> None:
         """
         Turn the bulb on.
         """
-        self.set_state(self.BULB_STATE_ON)
+        self.set_state(self.BULB_STATE_ON, period)
 
     @property
     def has_emeter(self) -> bool:
