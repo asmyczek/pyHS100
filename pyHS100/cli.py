@@ -203,7 +203,8 @@ def emeter(dev, year, month, erase):
 @cli.command()
 @click.argument("brightness", type=click.IntRange(0, 100), default=None,
                 required=False)
-@click.option('--transition', type=int, default=None, required=False)
+@click.option('--transition', type=int, default=None, required=False,
+              help='Transition period in milliseconds, default 500.')
 @pass_dev
 def brightness(dev, brightness, transition):
     """Get or set brightness."""
@@ -223,7 +224,8 @@ def brightness(dev, brightness, transition):
 @cli.command()
 @click.argument("temperature", type=click.IntRange(2500, 9000), default=None,
                 required=False)
-@click.option('--transition', type=int, default=None, required=False)
+@click.option('--transition', type=int, default=None, required=False,
+              help='Transition period in milliseconds, default 500.')
 @pass_dev
 def temperature(dev, temperature, transition):
     """Get or set color temperature. (Bulb only)"""
@@ -246,7 +248,8 @@ def temperature(dev, temperature, transition):
 @click.argument("h", type=click.IntRange(0, 360), default=None, required=False)
 @click.argument("s", type=click.IntRange(0, 100), default=None, required=False)
 @click.argument("v", type=click.IntRange(0, 100), default=None, required=False)
-@click.option('--transition', type=int, default=None, required=False)
+@click.option('--transition', type=int, default=None, required=False,
+              help='Transition period in milliseconds, default 500.')
 @click.pass_context
 @pass_dev
 def hsv(dev, ctx, h, s, v, transition):
