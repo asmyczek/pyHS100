@@ -178,6 +178,11 @@ class SmartBulb(SmartDevice):
         if period is None:
             period = self.transition_period
 
+        if period < 0:
+            raise SmartDeviceException(
+                'Invalid transition value: {}'
+                '(requires positive value)'.format(period))
+
         light_state = {
             "hue": state[0],
             "saturation": state[1],
@@ -231,6 +236,11 @@ class SmartBulb(SmartDevice):
         if period is None:
             period = self.transition_period
 
+        if period < 0:
+            raise SmartDeviceException(
+                'Invalid transition value: {}'
+                '(requires positive value)'.format(period))
+
         light_state = {
             "color_temp": temp,
             "transition_period": period
@@ -276,6 +286,11 @@ class SmartBulb(SmartDevice):
 
         if period is None:
             period = self.transition_period
+
+        if period < 0:
+            raise SmartDeviceException(
+                'Invalid transition value: {}'
+                '(requires positive value)'.format(period))
 
         light_state = {
             "brightness": brightness,
@@ -327,6 +342,11 @@ class SmartBulb(SmartDevice):
 
         if period is None:
             period = self.transition_period
+
+        if period < 0:
+            raise SmartDeviceException(
+                'Invalid transition value: {}'
+                '(requires positive value)'.format(period))
 
         light_state = {
             "on_off": new_state,
